@@ -3,6 +3,8 @@ const Order = require('./orders')
 const Product = require('./products')
 const Review = require('./reviews')
 const Category = require('./categories')
+const Click = require('./clicks')
+const Scroll = require('./scroll')
 const OrderProduct = require('./ordersProductsJoin')
 
 Product.hasMany(Review)
@@ -44,5 +46,7 @@ module.exports = {
 	Product,
 	Review,
 	OrderProduct,
-	Category
+	Category,
+	Click,
+	Scroll
 }

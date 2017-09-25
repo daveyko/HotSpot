@@ -11,6 +11,7 @@ export function SingleProductView(props) {
 	const productId = +props.match.params.id
 	const {products, categories} = props
 	const currentProduct = products.filter((product) => product.id === productId)[0]
+	
 
 	if(currentProduct) {
 		return (
