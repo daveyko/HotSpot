@@ -15,11 +15,11 @@ const mapStateToProps = function(state) {
 }
 
 const mapDispatchToProps = (dispatch) => {
-    return {
-        handleAddToCart: (product, quantity) => {
-            return dispatch(addToCart(product, quantity))
-        },
-    }
+	return {
+		handleAddToCart: (product, quantity) => {
+			return dispatch(addToCart(product, quantity))
+		},
+	}
 }
 
 class ProductList extends Component{
@@ -31,7 +31,7 @@ class ProductList extends Component{
 	}
 
 	render () {
-		console.log(this.props.search)
+
 		let results = this.props.search.query ? this.props.products.filter(val => val.name.includes(this.props.search.query)) : this.props.products
 		if(results){
 			return (

@@ -3,7 +3,7 @@ import {IndexLinkContainer} from 'react-router-bootstrap'
 import {Navbar, Nav, NavItem, NavDropdown, MenuItem, Label} from 'react-bootstrap'
 import {NavLink} from 'react-router-dom'
 import history from './../history'
-import {setModal, removeModal, getMe, logout} from '../store'
+import {setModal, removeModal, getMe, logout, setGraph} from '../store'
 import {connect} from 'react-redux'
 import SearchQ from './Search.jsx'
 
@@ -50,6 +50,11 @@ function navbarInstance(props) {
 						<MenuItem divider />
 						<MenuItem eventKey={3.3}>Logout</MenuItem>
 					</NavDropdown>
+					<NavDropdown eventKey={2} title="Hot-Spot" id="basic-nav-dropdown">
+						<MenuItem onClick={() => {props.handleScatter('Scatter')}} eventKey={3.1}>ScatterPlot</MenuItem>
+						<MenuItem onClick={() => {props.handleScatter('Heat')}} eventKey={3.3}>HeatMap</MenuItem>
+						<MenuItem onClick={() => {props.handleScatter('Scroll')}} eventKey={3.3}>Scroll HeatMap</MenuItem>
+					</NavDropdown>
 					{props.user.id ?
 						<NavItem eventKey={3} onClick={() => {props.handleLogOut()}} href="#">Logout</NavItem>
 						:
@@ -88,6 +93,9 @@ const mapDispatchToProps = (dispatch) => {
 		},
 		handleCartModal(modalType) {
 			dispatch(setModal(modalType))
+		},
+		handleScatter(graph){
+			dispatch(setGraph(graph))
 		}
 	}
 }

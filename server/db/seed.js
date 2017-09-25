@@ -7,9 +7,16 @@ const Category = db.model('category')
 const ProductCategory = db.model('productCategory')
 const Order = db.model('order')
 const OrderProduct = db.model('orderProduct')
+const Click = db.model('click')
+const Scroll = db.model('scroll')
 const Chance = require('chance')
 const chance = new Chance()
 const chalk = require('chalk')
+
+// const syncDb = () => db.sync({force: true})
+
+// sessionStore.sync()
+// 	.then(syncDb)
 
 const promises = []
 const promisesUsers = []
@@ -146,6 +153,87 @@ orderQuantity.map((val, idx) => {
 		productId: orderProductId[idx]
 	}))
 })
+
+//SEED CLICKS
+// const xAxis = [], yAxis = [], url = [], urlSubstring = [], count = [], page = []
+// for (i = 1; i <= 2000; i ++){
+// 	let full = chance.url({domain: 'www.google.com'})
+// 	let sub = full.substring(7, full.indexOf('/',7))
+// 	xAxis.push(chance.integer({min: 0, max: 2500}))
+// 	yAxis.push(chance.integer({min: 0, max: 1000}))
+// 	url.push(full)
+// 	urlSubstring.push(sub)
+// 	count.push(chance.integer({min: 0, max: 1000}))
+// 	page.push(chance.pick(['/home', '/products' + '/' +  chance.integer({min: 0, max: 50})]))
+// }
+
+// for (i = 1; i <= 2000; i ++){
+// 	let full = chance.url({domain: 'www.bing.com'})
+// 	let sub = full.substring(7, full.indexOf('/',7))
+// 	xAxis.push(chance.integer({min: 0, max: 2500}))
+// 	yAxis.push(chance.integer({min: 0, max: 1000}))
+// 	url.push(full)
+// 	urlSubstring.push(sub)
+// 	count.push(chance.integer({min: 0, max: 1000}))
+// 	page.push(chance.pick(['/home', '/products' + '/' +  chance.integer({min: 0, max: 50})]))
+// }
+
+// for (i = 1; i <= 2000; i ++){
+// 	let full = chance.url({domain: 'www.reddit.com'})
+// 	let sub = full.substring(7, full.indexOf('/', 7))
+// 	xAxis.push(chance.integer({min: 0, max: 2500}))
+// 	yAxis.push(chance.integer({min: 0, max: 1000}))
+// 	url.push(full)
+// 	urlSubstring.push(sub)
+// 	count.push(chance.integer({min: 0, max: 1000}))
+// 	page.push(chance.pick(['/home', '/products' + '/' +  chance.integer({min: 0, max: 50})]))
+// }
+
+// for (i = 1; i <= 500; i ++){
+// 	let full = chance.url()
+// 	let sub = full.substring(7, full.indexOf('/',7))
+// 	xAxis.push(chance.integer({min: 0, max: 2500}))
+// 	yAxis.push(chance.integer({min: 0, max: 7196}))
+// 	url.push(chance.url())
+// 	urlSubstring.push(sub)
+// 	count.push(chance.integer({min: 0, max: 200}))
+// 	page.push(chance.pick(['/home', '/products' + '/' + chance.integer({min: 0, max: 50})]))
+// }
+
+// xAxis.map((val, idx) => {
+// 	promises.push(Click.create({
+// 		x: xAxis[idx],
+// 		y: yAxis[idx],
+// 		referrer: url[idx],
+// 		referrerSubstring: urlSubstring[idx],
+// 		count: count[idx],
+// 		page: page[idx]
+// 	}))
+// })
+
+// //SEED SCROLLS
+
+// const y = [], countScroll = []
+
+// for (let i = 0; i < 300; i ++) {
+// 	y.push(chance.integer({min: 0, max: 7200}))
+// 	countScroll.push(chance.integer({min: 0, max: 300}))
+// }
+
+// y.map((val, idx) => {
+// 	promises.push(Scroll.create({
+// 		y: y[idx],
+// 		count: count[idx]
+// 	}))
+// })
+
+
+
+
+
+
+
+
 
 // Refactor this
 Promise.all(promises)

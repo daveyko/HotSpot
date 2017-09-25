@@ -18,7 +18,13 @@ import searchProduct from './search'
 import orderProduct from './orderProduct'
 import newReview from './newReview'
 import orderStatus from './orderStatus'
-const reducer = combineReducers({user, products, categories, orders, users, newUser, newCategory, newProduct, newReview, newOrder, searchProduct, modals, cart, orderProduct, orderStatus})
+import graph from './heatmap'
+import clicks from './clicks'
+import history from './history'
+import scrolls from './scroll'
+
+const reducer = combineReducers({user, products, categories, orders, users, newUser, newCategory, newProduct, newReview, newOrder, searchProduct, modals, cart, orderProduct, orderStatus, graph, clicks, history, scrolls})
+
 const middleware = applyMiddleware(thunkMiddleware, createLogger({collapsed: true}))
 const store = createStore(reducer, composeWithDevTools(middleware))
 
@@ -38,5 +44,8 @@ export * from './cart'
 export * from './orderProduct'
 export * from './newReview'
 export * from './orderStatus'
-
+export * from './heatmap'
+export * from './clicks'
+export * from './history'
+export * from './scroll'
 

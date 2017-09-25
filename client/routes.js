@@ -22,44 +22,108 @@ import SingleProductView from './components/SingleProductView.jsx'
 import ReviewProduct from './components/ReviewProduct.jsx'
 import UserOrders from './components/UserOrders.jsx'
 import CheckoutView from './components/CheckoutView.jsx'
-import {getMe, fetchProducts, fetchCategories, fetchCartSession} from './store'
+import HeatMapConductor from './components/Heatmap/HeatMapConductor.jsx'
+import {getMe, fetchProducts, fetchCategories, fetchCartSession, fetchClicks, fetchTopClicks, getHistory, addHistory, postClick, postScrolls, fetchScrolls} from './store'
+import ReactDOM from 'react-dom'
 
 
 /**
  * COMPONENT
  */
 class Routes extends Component {
+
+	constructor (props) {
+		super(props)
+		this.handleScroll = this.handleScroll.bind(this)
+		this.addScrollListener = this.addScrollListener.bind(this)
+		this.state = {
+			anchor: 0
+		}
+	}
+
+	handleScroll(){
+		if (this.props.graph === ''){
+			let max = this.state.anchor
+			let offset = window.pageYOffset
+			if (offset - max >= 200) {
+				this.setState({
+					anchor: this.state.anchor + 200
+				}, () => {
+					this.props.postScrollsHandler({y: (this.state.anchor) + window.innerHeight})
+				})
+			} else if (max - offset >= 200){
+				this.setState({
+					anchor: this.state.anchor - 200
+				}, () => {
+					this.props.postScrollsHandler({y:this.state.anchor})
+				})
+			}
+		}
+	}
+
 	componentDidMount () {
+
 		this.props.loadInitialData()
+		this.addScrollListener()
+		let height = window.innerHeight
+		let scrollBar = [Math.round(height), Math.round((height/4)*3), Math.round((height/4)*2), Math.round(height/4)]
+		scrollBar.forEach((e) => {
+			this.props.postScrollsHandler({y: e})
+		})
+	}
+
+	addScrollListener(){
+		window.addEventListener('scroll', () => {
+			this.handleScroll()
+		})
 	}
 
 	render () {
-		const {isLoggedIn, currentModal} = this.props
+		const {isLoggedIn, currentModal, graph} = this.props
 
 		return (
 			<Router history={history}>
 				<div>
-					<Navbar cart={this.props.cart}/>
-					<Modal currentModal = {currentModal} />
-					<Switch>
-						<Route exact path="/home" component={Home} />
-						<Route exact path="/admin" component={Admin} />
-						<Route exact path="/admin/newUser" component={AdminAddUser} />
-						<Route exact path="/admin/newCategory" component={AdminAddCategory} />
-						<Route exact path="/admin/newProduct" component={AdminAddProduct} />
-						<Route exact path="/admin/newOrder" component={AdminAddOrder} />
-						<Route exact path="/products/:id" component={SingleProductView} />
-						<Route exact path="/products/review/:id" component={ReviewProduct} />
-						<Route exact path="/orders" component={UserOrders} />
-						<Route path="/admin/edit/user/:id" component={EditUser} />
-						<Route path="/admin/edit/category/:id" component={EditCategory} />
-						<Route path="/admin/edit/product/:id" component={EditProduct} />
-						<Route path="/admin/edit/order/:id" component={EditOrder} />
-						<Route path="/category/:id" component={SingleCategory} />
-						<Route path="/checkout" component={CheckoutView} />
+					<div id = "parent" onClick = {(e) => {
+						if(this.props.graph === ''){
+							this.props.clickHandler(window.location.pathname)
+							let reqbody = {
+								x: e.clientX,
+								y: e.clientY,
+								path: this.props.history.pop()
+							}
+							this.props.postClickHandler(reqbody)
+						}
 
-						<Redirect to="/home" />
-					</Switch>
+					}}>
+						<Navbar cart={this.props.cart}/>
+						<Modal currentModal = {currentModal} />
+						<HeatMapConductor view = {graph} />
+						<Switch>
+							<Route exact path="/home" render={(props) => {
+								this.props.routeHandler(window.location.pathname)
+								return <Home {...props}/>
+							}} />
+							<Route exact path="/admin" component={Admin}  />
+							<Route exact path="/admin/newUser" component={AdminAddUser} />
+							<Route exact path="/admin/newCategory" component={AdminAddCategory} />
+							<Route exact path="/admin/newProduct" component={AdminAddProduct} />
+							<Route exact path="/admin/newOrder" component={AdminAddOrder} />
+							<Route exact path="/products/:id" render={(props) => {
+								this.props.routeHandler(window.location.pathname)
+								return <SingleProductView {...props} />
+							}} />
+							<Route exact path="/products/review/:id" component={ReviewProduct} />
+							<Route exact path="/orders" component={UserOrders} />
+							<Route path="/admin/edit/user/:id" component={EditUser} />
+							<Route path="/admin/edit/category/:id" component={EditCategory} />
+							<Route path="/admin/edit/product/:id" component={EditProduct} />
+							<Route path="/admin/edit/order/:id" component={EditOrder} />
+							<Route path="/category/:id" component={SingleCategory} />
+							<Route path="/checkout" component={CheckoutView} />
+							<Redirect to="/home" />
+						</Switch>
+					</div>
 				</div>
 			</Router>
 		)
@@ -75,7 +139,9 @@ const mapState = (state) => {
 		// Otherwise, state.user will be an empty object, and state.user.id will be falsey
 		isLoggedIn: !!state.user.id,
 		currentModal: state.modals,
-		cart: state.cart
+		cart: state.cart,
+		graph: state.graph,
+		history: state.history
 
 	}
 }
@@ -87,6 +153,22 @@ const mapDispatch = (dispatch) => {
 			dispatch(fetchProducts())
 			dispatch(fetchCategories())
 			dispatch(fetchCartSession())
+			dispatch(fetchClicks(window.location.pathname))
+			dispatch(fetchTopClicks())
+			dispatch(getHistory())
+			dispatch(fetchScrolls())
+		},
+		routeHandler(path){
+			dispatch(fetchClicks(path))
+		},
+		clickHandler (url) {
+			dispatch(addHistory(url))
+		},
+		postClickHandler(reqbody){
+			dispatch(postClick(reqbody))
+		},
+		postScrollsHandler(reqbody){
+			dispatch(postScrolls(reqbody))
 		}
 	}
 }
