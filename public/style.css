@@ -11,7 +11,7 @@ html,body {
 }
 
 div.basicHeatmap{
-	height: 100%;
+	height: 14000px;
 	width: 100%;
 	opacity: 0.6;
 	background-color: gray;
@@ -21,10 +21,27 @@ div.basicHeatmap{
 	left: 0px;
 }
 
-div .main-svg {
-	height: 100%;
+.main-svg {
 	width: 100%;
+	height: 100%;
 }
+
+/* .svg-container{
+	height: 100%;
+	display: inline-block;
+	position: relative;
+	width: 100%;
+	padding-bottom: 100%;
+	vertical-align: top;
+	overflow: hidden;
+} */
+
+/* .svg-content-responsive{
+	display: inline-block;
+	position: absolute;
+	top: 10px;
+	left: 0;
+} */
 
 button.btn.btn-default {
 	z-index: 4;
@@ -37,16 +54,16 @@ div#parent{
 	position: relative;
 }
 
-#parent div.Responsive-wrapper{
-	height: 100%;
-	width: 100%;
-}
-
 div#order{
 	border: #337ab7 solid 3px;
 	border-radius: 4px;
 	margin: 5px 10px;
 	width: 40%;
+}
+
+/* #parent div.Responsive-wrapper{
+	height: 100%;
+	width: 100%;
 }
 
 /* div#id{

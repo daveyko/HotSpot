@@ -14,37 +14,39 @@ class basicHeatmap extends React.Component {
 
 	render(){
 
-		let topSites = this.props.clicks.top.slice(0,10)
+		let topSites = this.props.clicks.top
 		let data = this.props.clicks.all
-		const popoverBottom = (
-			<Popover id="popover-positioned-bottom" title="Popover bottom">
-				{topSites.map((site,i) => {
-					return (
-						<Checkbox onChange = {(e) => {
-							if (e.target.checked){
-								this.setState({
-									topSites: this.state.topSites.concat(site.referrerSubstring)
-								}, () => {
-									this.props.handleFilter(this.state.topSites)
-								}) }
-							else {
-								this.setState({
-									topSites: this.state.topSites.filter((e) =>{
-										return e !== site.referrerSubstring
-									})
-								}, () => {
-									this.props.handleFilter(this.state.topSites) })
-							}
-						}}
-						 key = {i} validationState="success">
-							{site.referrerSubstring}
-						</Checkbox>
-					)})
-				}
-			</Popover>
-		)
+		const popoverBottom = (<div></div>)
+		// (
+		// <Popover id="popover-positioned-bottom" title="Popover bottom">
+		// 	{topSites.map((site,i) => {
+		// 		return (
+		// 			<Checkbox onChange = {(e) => {
+		// 				if (e.target.checked){
+		// 					this.setState({
+		// 						topSites: this.state.topSites.concat(site.referrerSubstring)
+		// 					}, () => {
+		// 						this.props.handleFilter(this.state.topSites)
+		// 					}) }
+		// 				else {
+		// 					this.setState({
+		// 						topSites: this.state.topSites.filter((e) =>{
+		// 							return e !== site.referrerSubstring
+		// 						})
+		// 					}, () => {
+		// 						this.props.handleFilter(this.state.topSites) })
+		// 				}
+		// 			}}
+		// 			 key = {i} validationState="success">
+		// 				{site.referrerSubstring}
+		// 			</Checkbox>
+		// 		)})
+		// 	}
+		// </Popover>
+		// )
 
 		if(this.props.graph === 'Scatter'){
+			console.log('SCROLLHEIGHT', document.body.scrollHeight)
 			return (
 				<div className = "basicHeatmap">
 					<OverlayTrigger trigger="click" placement="bottom" overlay={popoverBottom}>

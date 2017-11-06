@@ -39,7 +39,10 @@ router.post('/', (req, res, next) => {
 	Click.findOrCreate({
 		where: {
 			x: req.body.x,
-			y: req.body.y
+			y: req.body.y,
+			element: req.body.element,
+			top: req.body.top,
+			left: req.body.left
 		},
 		defaults: {
 			referrer: req.body.referrer,
