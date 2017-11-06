@@ -54,24 +54,26 @@ class Chart extends React.Component {
 		// 	this.setState({height: svgHeight})
 		// }
 
+
 		if (this.props.graph === 'Scatter') {
 			return (
 
 				<div className = "main-svg" onClick = {() => {
 					this.props.handleClick()}}>
-					<svg width = {this.props.parentWidth || '100%'}
-						height = '100%' >
+					{/* <svg preserveAspectRatio = "xMinYMin meet" viewBox = {`0 0 ${document.body.clientWidth} ${document.body.scrollHeight}`} className = "svg-content-responsive" > */}
+					<svg width = {this.props.parentWidth || '100%'} height = '100%'>
 						<Scatter width = {this.props.parentWidth || 1440} height = {this.state.height} />
 					</svg>
+					{/* </svg> */}
 				</div>
 
 			)
 		} else {
 			return (
 
-				<div className = "main-svg" onClick = {() => {
+				<div className = "svg-container" onClick = {() => {
 					this.props.handleClick()}}>
-					<svg width = {this.props.parentWidth || '100%'}
+					<svg className = "svg-content-responsive" width = {this.props.parentWidth || '100%'}
 						height = '100%' >
 						{this.props.graph === 'Heat' ? <Heat  height = {this.state.height} width = {this.props.parentWidth || 1440} /> : <ScrollHeat height = {this.state.height} width = {this.props.parentWidth || 1440} /> }
 					</svg>
@@ -94,5 +96,5 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 
-export default ChartContainer(connect(state => state, mapDispatchToProps)(Chart))
+export default connect(state => state, mapDispatchToProps)(Chart)
 

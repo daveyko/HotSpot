@@ -7,6 +7,7 @@ const GET_CLICKS = 'GET_CLICKS'
 const GET_TOP_CLICKS = 'GET_TOP_CLICKS'
 const FILTER_CLICKS = 'FILTER_CLICKS'
 const ADD_CLICK = 'ADD_CLICK'
+const RESIZE_CLICK = 'RESIZE_CLICK'
 
 
 
@@ -25,6 +26,7 @@ const getClicks = clicks => ({type: GET_CLICKS, clicks})
 const getTopClicks = topClicks => ({type: GET_TOP_CLICKS, topClicks})
 const filterClicks = filteredClicks => ({type: FILTER_CLICKS, filteredClicks})
 const addClick = click => ({type: ADD_CLICK, click})
+export const resizeClicks = clicks => ({type:RESIZE_CLICK, clicks})
 
 
 
@@ -95,6 +97,9 @@ export default function (state = clickState, action) {
 		return newState
 	case ADD_CLICK:
 		newState = {...state, all: state.all.concat(action.click)}
+		return newState
+	case RESIZE_CLICK:
+		newState = {...state, all: action.clicks}
 		return newState
 	default:
 		return state

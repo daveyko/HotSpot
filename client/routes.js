@@ -36,9 +36,21 @@ class Routes extends Component {
 		super(props)
 		this.handleScroll = this.handleScroll.bind(this)
 		this.addScrollListener = this.addScrollListener.bind(this)
+		this.hashCode = this.hashCode.bind(this)
 		this.state = {
 			anchor: 0
 		}
+	}
+
+	hashCode(str){
+		var hash = 0, i, chr
+		if (str.length === 0) return hash
+		for (i = 0; i < str.length; i++) {
+			chr   = str.charCodeAt(i)
+			hash  = ((hash << 5) - hash) + chr
+			hash |= 0 // Convert to 32bit integer
+		}
+		return hash
 	}
 
 	handleScroll(){
@@ -86,12 +98,18 @@ class Routes extends Component {
 				<div>
 					<div id = "parent" onClick = {(e) => {
 						if(this.props.graph === ''){
+							let domRect = e.target.getBoundingClientRect()
 							this.props.clickHandler(window.location.pathname)
+							console.log('HASH', this.hashCode(e.target.outerHTML))
 							let reqbody = {
-								x: e.clientX,
-								y: e.clientY,
-								path: this.props.history.pop()
+								x: e.pageX,
+								y: e.pageY,
+								path: this.props.history.pop(),
+								element: this.hashCode(e.target.outerHTML),
+								top: e.target.getBoundingClientRect().top,
+								left: e.target.getBoundingClientRect().left
 							}
+
 							this.props.postClickHandler(reqbody)
 						}
 

@@ -12,6 +12,18 @@ const Click = db.define('click', {
 		type: Sequelize.FLOAT,
 		allowNull: false
 	},
+	element: {
+		type: Sequelize.BIGINT,
+		allowNull: false
+	},
+	top: {
+		type: Sequelize.INTEGER,
+		allowNull: false
+	},
+	left: {
+		type: Sequelize.INTEGER,
+		allowNull: false
+	},
 	referrer: {
 		type: Sequelize.STRING,
 		defaultValue: 'http://www.google.com/'

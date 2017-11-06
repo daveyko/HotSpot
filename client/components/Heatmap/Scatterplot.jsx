@@ -1,6 +1,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import Tooltip from './ScatterTool.jsx'
+import {resizeClicks} from '../../store/clicks.js'
 const d3  = require('d3')
 
 class Scatterplot extends React.Component {
@@ -8,6 +9,9 @@ class Scatterplot extends React.Component {
 		super(props)
 		this.showToolTip = this.showToolTip.bind(this)
 		this.hideToolTip = this.hideToolTip.bind(this)
+		this.hashCode = this.hashCode.bind(this)
+		this.repositionCoordinates = this.repositionCoordinates.bind(this)
+
 		this.state = {
 			tooltip: {
 				visibility: false,
@@ -18,6 +22,54 @@ class Scatterplot extends React.Component {
 			}
 		}
 	}
+
+	componentDidMount(){
+		// var prevWidth = 0
+		// const onLoad = () => {
+		// 	prevWidth = window.innerWidth
+		// }
+		// window.addEventListener('resize', () => {
+		// 	var currWidth = window.innerWidth
+		// 	prevWidth = currWidth
+		// 	let topListItem = document.getElementsByTagName('li')[0].getBoundingClientRect()
+		// 	console.log('TOPLISTITEMDELTA', topListItem.top, topListItem.left)
+		// })
+		// onLoad()
+		window.addEventListener('resize', this.repositionCoordinates)
+
+	}
+
+	hashCode(str){
+		var hash = 0, i, chr
+		if (str.length === 0) return hash
+		for (i = 0; i < str.length; i++) {
+			chr   = str.charCodeAt(i)
+			hash  = ((hash << 5) - hash) + chr
+			hash |= 0 // Convert to 32bit integer
+		}
+		return hash
+	}
+
+	repositionCoordinates(){
+		let hash
+		let newClicksArr = []
+		let allEl = document.getElementsByTagName('*')
+		for (let i = 0; i < allEl.length; i++){
+			hash = this.hashCode(allEl[i].outerHTML)
+			let matchingArr = this.props.clicks.all.filter((obj) => Number(obj.element) === hash)
+			if (matchingArr.length){
+				matchingArr.forEach((obj) => {
+					obj.x = obj.x*(allEl[i].getBoundingClientRect().left/obj.left)
+					obj.y = obj.y*(obj.top/allEl[i].getBoundingClientRect().top)
+					obj.top = allEl[i].getBoundingClientRect().top
+					obj.left = allEl[i].getBoundingClientRect().left
+					newClicksArr.push(obj)
+				})
+			}
+		}
+		this.props.handleResize(newClicksArr)
+	}
+
 
 	showToolTip(e){
 		e.target.setAttribute('stroke', 'white')
@@ -40,8 +92,7 @@ class Scatterplot extends React.Component {
 		})
 	}
 	render(){
-
-		console.log('HEIGHT', window.innerHeight, 'WIDTH', window.innerWidth)
+		console.log('RERENDER!')
 
 		let xScale = d3.scaleLinear()
 			.range([0,window.innerWidth])
@@ -87,4 +138,11 @@ class Scatterplot extends React.Component {
 	}
 }
 
-export default connect(state => state)(Scatterplot)
+const mapDispatchToProps = (dispatch) => {
+	return {
+		handleResize(arr){
+			dispatch(resizeClicks(arr))
+		}
+	}
+}
+export default connect(state => state, mapDispatchToProps)(Scatterplot)
