@@ -109,7 +109,7 @@ class Routes extends Component {
 	}
 
 	render () {
-		console.log('HISTORY', this.props.history)
+
 		const {isLoggedIn, currentModal, graph} = this.props
 		return(
 			<Router history={history}>
@@ -119,11 +119,10 @@ class Routes extends Component {
 							let adjustedX = this.getPosition(e.target).x
 							let adjustedY = this.getPosition(e.target).y
 							this.props.clickHandler(window.location.pathname)
-							console.log('pagex', e.pageX, 'pagey', e.pageY,'TOP', e.target.getBoundingClientRect().top, 'LEFT',e.target.getBoundingClientRect().left, 'X', adjustedX, 'Y', adjustedY)
 							let reqbody = {
 								x: e.pageX,
 								y: e.pageY,
-								path: this.props.history.pop(),
+								path: window.location.path,
 								element: this.hashCode(e.target.outerHTML),
 								top: adjustedY,
 								left: adjustedX,
@@ -135,7 +134,6 @@ class Routes extends Component {
 								.then(() => {
 									this.props.postClickHandler(reqbody)
 								})
-
 						}
 
 					}}>
@@ -214,8 +212,8 @@ const mapDispatch = (dispatch) => {
 		clickHandler (url) {
 			dispatch(addHistory(url))
 		},
-		preClickHandler(){
-			return Promise.resolve(dispatch(fetchClicks(window.location.pathname)))
+		preClickHandler(path){
+			return Promise.resolve(dispatch(fetchClicks(path)))
 		},
 		postClickHandler(reqbody){
 			dispatch(postClick(reqbody))

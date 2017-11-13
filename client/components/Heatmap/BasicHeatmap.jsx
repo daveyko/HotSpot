@@ -1,6 +1,7 @@
 import React from 'react'
 import {connect, Provider} from 'react-redux'
 import store from '../../store'
+import history from '../../history'
 import Chart from './Chart.js'
 import {fetchFilterClicks, removeGraph, fetchClicks } from '../../store'
 import {Popover, OverlayTrigger, Button, Checkbox} from 'react-bootstrap'
@@ -15,7 +16,7 @@ class basicHeatmap extends React.Component {
 	}
 
 	render(){
-		console.log('HERE!!!')
+
 		let topSites = this.props.clicks.top
 		let data = this.props.clicks.all
 		const popoverBottom = (<div></div>)
@@ -49,7 +50,7 @@ class basicHeatmap extends React.Component {
 
 		if(this.props.graph === 'Scatter'){
 			return (
-				<PopoutWindow title = "Scatter" url = "http://localhost:8080/home/graph" options = {{width: '1440px', height: '840px'}} onClosing = {this.props.history.push('/home')}>
+				<PopoutWindow title = "Scatter" url = "http://localhost:8080/home/graph" options = {{width: '1440px', height: '840px'}}>
 					<Provider store = {store}>
 						<div className = "basicHeatmap">
 							<OverlayTrigger trigger="click" placement="bottom" overlay={popoverBottom}>

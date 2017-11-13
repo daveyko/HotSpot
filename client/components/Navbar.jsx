@@ -25,44 +25,44 @@ function navbarInstance(props) {
 
 	const cartData = getCartData()
 
-	const reposition = () => {
-		console.log('CALLED!')
-		let elementsHashArr = props.clicks.all.map((click) => {
-			return Number(click.element)
-		})
+	// const reposition = () => {
+	// 	console.log('CALLED!')
+	// 	let elementsHashArr = props.clicks.all.map((click) => {
+	// 		return Number(click.element)
+	// 	})
 
-		let filteredElementsHashArr = elementsHashArr.filter((item, pos) => elementsHashArr.indexOf(item) === pos)
+	// 	let filteredElementsHashArr = elementsHashArr.filter((item, pos) => elementsHashArr.indexOf(item) === pos)
 
-		for (let i = 0; i < filteredElementsHashArr.length; i++){
+	// 	for (let i = 0; i < filteredElementsHashArr.length; i++){
 
-			let clickedElementsArr = props.clicks.all.filter((click) => Number(click.element) === filteredElementsHashArr[i])
+	// 		let clickedElementsArr = props.clicks.all.filter((click) => Number(click.element) === filteredElementsHashArr[i])
 
-			console.log('clickedElementsARR!', clickedElementsArr)
-			let baselineClick = clickedElementsArr.filter((click) => click.clientwidth === 1440)[0]
+	// 		console.log('clickedElementsARR!', clickedElementsArr)
+	// 		let baselineClick = clickedElementsArr.filter((click) => click.clientwidth === 1440)[0]
 
-			let baselineLeft = baselineClick.left
+	// 		let baselineLeft = baselineClick.left
 
-			let baselineTop = baselineClick.top
+	// 		let baselineTop = baselineClick.top
 
-			let clicksToReposition = clickedElementsArr.filter((click) => click.clientwidth !== 1440).map((filteredClick) => {
-				return {
-					id: filteredClick.id,
-					x: filteredClick.x + (baselineLeft - filteredClick.left),
-					y: filteredClick.y - Math.abs(baselineTop - filteredClick.top),
-					element: filteredClick.element,
-					top: baselineTop,
-					left: baselineLeft,
-					clientwidth: filteredClick.clientwidth,
-					clientheight: filteredClick.clientheight,
-					resized: true
-				}
-			})
-			console.log('CLICKSTOREPO', clicksToReposition)
-			if(clicksToReposition.length){
-				props.handleResize(clicksToReposition)
-			}
-		}
-	}
+	// 		let clicksToReposition = clickedElementsArr.filter((click) => click.clientwidth !== 1440).map((filteredClick) => {
+	// 			return {
+	// 				id: filteredClick.id,
+	// 				x: filteredClick.x + (baselineLeft - filteredClick.left),
+	// 				y: filteredClick.y - Math.abs(baselineTop - filteredClick.top),
+	// 				element: filteredClick.element,
+	// 				top: baselineTop,
+	// 				left: baselineLeft,
+	// 				clientwidth: filteredClick.clientwidth,
+	// 				clientheight: filteredClick.clientheight,
+	// 				resized: true
+	// 			}
+	// 		})
+	// 		console.log('CLICKSTOREPO', clicksToReposition)
+	// 		if(clicksToReposition.length){
+	// 			props.handleResize(clicksToReposition)
+	// 		}
+	// 	}
+	// }
 
 	return (
 		<Navbar inverse collapseOnSelect>
@@ -93,6 +93,7 @@ function navbarInstance(props) {
 					<NavDropdown eventKey={2} title="Hot-Spot" id="basic-nav-dropdown">
 						<MenuItem onClick={() => {
 							props.handleScatter('Scatter')
+							props.getClicks()
 							history.push(`${window.location.pathname}/graph`)
 						}} eventKey={3.1}>Scatter
 						</MenuItem>
@@ -146,7 +147,7 @@ const mapDispatchToProps = (dispatch) => {
 			dispatch(resizeClicks(arr))
 		},
 		getClicks(){
-			return Promise.resolve(dispatch(fetchClicks(JSON.stringify(window.location.pathname))))
+			dispatch(fetchClicks((window.location.pathname)))
 		}
 	}
 }

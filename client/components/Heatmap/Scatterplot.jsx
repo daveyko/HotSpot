@@ -9,8 +9,8 @@ class Scatterplot extends React.Component {
 		super(props)
 		this.showToolTip = this.showToolTip.bind(this)
 		this.hideToolTip = this.hideToolTip.bind(this)
-		this.hashCode = this.hashCode.bind(this)
-		this.repositionCoordinates = this.repositionCoordinates.bind(this)
+		// this.hashCode = this.hashCode.bind(this)
+		// this.repositionCoordinates = this.repositionCoordinates.bind(this)
 		this.reposition = this.reposition.bind(this)
 		this.state = {
 			tooltip: {
@@ -76,40 +76,40 @@ class Scatterplot extends React.Component {
 		}
 	}
 
-	hashCode(str){
-		var hash = 0, i, chr
-		if (str.length === 0) return hash
-		for (i = 0; i < str.length; i++) {
-			chr   = str.charCodeAt(i)
-			hash  = ((hash << 5) - hash) + chr
-			hash |= 0 // Convert to 32bit integer
-		}
-		return hash
-	}
+	// hashCode(str){
+	// 	var hash = 0, i, chr
+	// 	if (str.length === 0) return hash
+	// 	for (i = 0; i < str.length; i++) {
+	// 		chr   = str.charCodeAt(i)
+	// 		hash  = ((hash << 5) - hash) + chr
+	// 		hash |= 0 // Convert to 32bit integer
+	// 	}
+	// 	return hash
+	// }
 
-	repositionCoordinates(){
-		let hash
-		let newClicksArr = []
-		let allEl = document.getElementsByTagName('*')
-		for (let i = 0; i < allEl.length; i++){
-			hash = this.hashCode(allEl[i].outerHTML)
-			let matchingArr = this.props.clicks.all.filter((obj) => Number(obj.element) === hash)
-			if (matchingArr.length){
-				matchingArr.forEach((obj) => {
-					if (allEl[i].getBoundingClientRect().left){
-						obj.x = obj.x*(allEl[i].getBoundingClientRect().left/obj.left)
-						obj.left = allEl[i].getBoundingClientRect().left
-					}
-					if (allEl[i].getBoundingClientRect().top){
-						obj.y = obj.y*(allEl[i].getBoundingClientRect().top/obj.top)
-						obj.top = allEl[i].getBoundingClientRect().top
-					}
-					newClicksArr.push(obj)
-				})
-			}
-		}
-		this.props.handleResize(newClicksArr)
-	}
+	// repositionCoordinates(){
+	// 	let hash
+	// 	let newClicksArr = []
+	// 	let allEl = document.getElementsByTagName('*')
+	// 	for (let i = 0; i < allEl.length; i++){
+	// 		hash = this.hashCode(allEl[i].outerHTML)
+	// 		let matchingArr = this.props.clicks.all.filter((obj) => Number(obj.element) === hash)
+	// 		if (matchingArr.length){
+	// 			matchingArr.forEach((obj) => {
+	// 				if (allEl[i].getBoundingClientRect().left){
+	// 					obj.x = obj.x*(allEl[i].getBoundingClientRect().left/obj.left)
+	// 					obj.left = allEl[i].getBoundingClientRect().left
+	// 				}
+	// 				if (allEl[i].getBoundingClientRect().top){
+	// 					obj.y = obj.y*(allEl[i].getBoundingClientRect().top/obj.top)
+	// 					obj.top = allEl[i].getBoundingClientRect().top
+	// 				}
+	// 				newClicksArr.push(obj)
+	// 			})
+	// 		}
+	// 	}
+	// 	this.props.handleResize(newClicksArr)
+	// }
 
 
 	showToolTip(e){
