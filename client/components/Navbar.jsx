@@ -1,7 +1,7 @@
 import React from 'react'
 import {IndexLinkContainer} from 'react-router-bootstrap'
 import {Navbar, Nav, NavItem, NavDropdown, MenuItem, Label} from 'react-bootstrap'
-import {NavLink} from 'react-router-dom'
+import {NavLink, Link} from 'react-router-dom'
 import history from './../history'
 import {setModal, removeModal, getMe, logout, setGraph, fetchClicks} from '../store'
 import {connect} from 'react-redux'
@@ -93,7 +93,9 @@ function navbarInstance(props) {
 					<NavDropdown eventKey={2} title="Hot-Spot" id="basic-nav-dropdown">
 						<MenuItem onClick={() => {
 							props.handleScatter('Scatter')
-						}} eventKey={3.1}>ScatterPlot</MenuItem>
+							history.push(`${window.location.pathname}/graph`)
+						}} eventKey={3.1}>Scatter
+						</MenuItem>
 						<MenuItem onClick={() => {props.handleScatter('Heat')}} eventKey={3.3}>HeatMap</MenuItem>
 						<MenuItem onClick={() => {props.handleScatter('Scroll')}} eventKey={3.3}>Scroll HeatMap</MenuItem>
 					</NavDropdown>
@@ -144,7 +146,7 @@ const mapDispatchToProps = (dispatch) => {
 			dispatch(resizeClicks(arr))
 		},
 		getClicks(){
-			return Promise.resolve(dispatch(fetchClicks(window.location.pathname)))
+			return Promise.resolve(dispatch(fetchClicks(JSON.stringify(window.location.pathname))))
 		}
 	}
 }

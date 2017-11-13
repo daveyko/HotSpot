@@ -109,140 +109,76 @@ class Routes extends Component {
 	}
 
 	render () {
-
+		console.log('HISTORY', this.props.history)
 		const {isLoggedIn, currentModal, graph} = this.props
-		if (graph){
-			return (
-				<PopoutWindow options = {{width: '1440px', height: '840px'}} title = "vat" url = "../public/index.html">
-					<Provider store={store}>
-						<Router history={history}>
-							<div>
-								<div id = "parent" onClick = {(e) => {
-									if(this.props.graph === ''){
-										let adjustedX = this.getPosition(e.target).x
-										let adjustedY = this.getPosition(e.target).y
-										this.props.clickHandler(window.location.pathname)
-										console.log('pagex', e.pageX, 'pagey', e.pageY,'TOP', e.target.getBoundingClientRect().top, 'LEFT',e.target.getBoundingClientRect().left, 'X', adjustedX, 'Y', adjustedY)
-										let reqbody = {
-											x: e.pageX,
-											y: e.pageY,
-											path: this.props.history.pop(),
-											element: this.hashCode(e.target.outerHTML),
-											top: adjustedY,
-											left: adjustedX,
-											clientwidth: window.innerWidth,
-											clientheight: window.innerHeight,
-											resized: false
-										}
-
-										if(e.target.innerHTML !== 'ScatterPlot'){
-											console.log('GETALLCLICKS!!!')
-											this.props.preClickHandler()
-												.then(() => {
-													this.props.postClickHandler(reqbody)
-												})
-										}
-									}
-
-								}}>
-									<Navbar cart={this.props.cart}/>
-									<Modal currentModal = {currentModal} />
-									<HeatMapConductor view = {graph} />
-									<Switch>
-										<Route exact path="/home" render={(props) => {
-											this.props.routeHandler(window.location.pathname)
-											return <Home {...props}/>
-										}} />
-										<Route exact path="/admin" component={Admin}  />
-										<Route exact path="/admin/newUser" component={AdminAddUser} />
-										<Route exact path="/admin/newCategory" component={AdminAddCategory} />
-										<Route exact path="/admin/newProduct" component={AdminAddProduct} />
-										<Route exact path="/admin/newOrder" component={AdminAddOrder} />
-										<Route exact path="/products/:id" render={(props) => {
-											this.props.routeHandler(window.location.pathname)
-											return <SingleProductView {...props} />
-										}} />
-										<Route exact path="/products/review/:id" component={ReviewProduct} />
-										<Route exact path="/orders" component={UserOrders} />
-										<Route path="/admin/edit/user/:id" component={EditUser} />
-										<Route path="/admin/edit/category/:id" component={EditCategory} />
-										<Route path="/admin/edit/product/:id" component={EditProduct} />
-										<Route path="/admin/edit/order/:id" component={EditOrder} />
-										<Route path="/category/:id" component={SingleCategory} />
-										<Route path="/checkout" component={CheckoutView} />
-										<Redirect to="/home" />
-									</Switch>
-								</div>
-							</div>
-						</Router>
-					</Provider>
-				</PopoutWindow>
-			)} else {
-			return(
-				<Router history={history}>
-					<div>
-						<div id = "parent" onClick = {(e) => {
-							if(this.props.graph === ''){
-								let adjustedX = this.getPosition(e.target).x
-								let adjustedY = this.getPosition(e.target).y
-								this.props.clickHandler(window.location.pathname)
-								console.log('pagex', e.pageX, 'pagey', e.pageY,'TOP', e.target.getBoundingClientRect().top, 'LEFT',e.target.getBoundingClientRect().left, 'X', adjustedX, 'Y', adjustedY)
-								let reqbody = {
-									x: e.pageX,
-									y: e.pageY,
-									path: this.props.history.pop(),
-									element: this.hashCode(e.target.outerHTML),
-									top: adjustedY,
-									left: adjustedX,
-									clientwidth: window.innerWidth,
-									clientheight: window.innerHeight,
-									resized: false
-								}
-								console.log('TARGET!!!!!', e.target.innerHTML)
-								if(e.target.innerHTML !== 'ScatterPlot'){
-									console.log('GETALLCLICKS!!!')
-									this.props.preClickHandler()
-										.then(() => {
-											this.props.postClickHandler(reqbody)
-										})
-								}
+		return(
+			<Router history={history}>
+				<div>
+					<div id = "parent" onClick = {(e) => {
+						if(this.props.graph === ''){
+							let adjustedX = this.getPosition(e.target).x
+							let adjustedY = this.getPosition(e.target).y
+							this.props.clickHandler(window.location.pathname)
+							console.log('pagex', e.pageX, 'pagey', e.pageY,'TOP', e.target.getBoundingClientRect().top, 'LEFT',e.target.getBoundingClientRect().left, 'X', adjustedX, 'Y', adjustedY)
+							let reqbody = {
+								x: e.pageX,
+								y: e.pageY,
+								path: this.props.history.pop(),
+								element: this.hashCode(e.target.outerHTML),
+								top: adjustedY,
+								left: adjustedX,
+								clientwidth: window.innerWidth,
+								clientheight: window.innerHeight,
+								resized: false
 							}
+							this.props.preClickHandler(this.props.history.pop())
+								.then(() => {
+									this.props.postClickHandler(reqbody)
+								})
 
-						}}>
-							<Navbar cart={this.props.cart}/>
-							<Modal currentModal = {currentModal} />
-							<HeatMapConductor view = {graph} />
-							<Switch>
-								<Route exact path="/home" render={(props) => {
-									this.props.routeHandler(window.location.pathname)
-									return <Home {...props}/>
-								}} />
-								<Route exact path="/admin" component={Admin}  />
-								<Route exact path="/admin/newUser" component={AdminAddUser} />
-								<Route exact path="/admin/newCategory" component={AdminAddCategory} />
-								<Route exact path="/admin/newProduct" component={AdminAddProduct} />
-								<Route exact path="/admin/newOrder" component={AdminAddOrder} />
-								<Route exact path="/products/:id" render={(props) => {
-									this.props.routeHandler(window.location.pathname)
-									return <SingleProductView {...props} />
-								}} />
-								<Route exact path="/products/review/:id" component={ReviewProduct} />
-								<Route exact path="/orders" component={UserOrders} />
-								<Route path="/admin/edit/user/:id" component={EditUser} />
-								<Route path="/admin/edit/category/:id" component={EditCategory} />
-								<Route path="/admin/edit/product/:id" component={EditProduct} />
-								<Route path="/admin/edit/order/:id" component={EditOrder} />
-								<Route path="/category/:id" component={SingleCategory} />
-								<Route path="/checkout" component={CheckoutView} />
-								<Redirect to="/home" />
-							</Switch>
-						</div>
+						}
+
+					}}>
+						<Navbar cart={this.props.cart}/>
+						<Modal currentModal = {currentModal} />
+						<Switch>
+							<Route exact path="/home" render={(props) => {
+								this.props.routeHandler(window.location.pathname)
+								return <Home {...props}/>
+							}} />
+							<Route exact path = "/home/graph"  render = { (props) =>
+							 (
+									<div>
+							 <HeatMapConductor view = {graph} />
+							 <Home {...props}/>
+									</div>
+								) } />
+							<Route exact path="/admin" component={Admin}  />
+							<Route exact path="/admin/newUser" component={AdminAddUser} />
+							<Route exact path="/admin/newCategory" component={AdminAddCategory} />
+							<Route exact path="/admin/newProduct" component={AdminAddProduct} />
+							<Route exact path="/admin/newOrder" component={AdminAddOrder} />
+							<Route exact path="/products/:id" render={(props) => {
+								this.props.routeHandler(window.location.pathname)
+								return <SingleProductView {...props} />
+							}} />
+							<Route exact path="/products/review/:id" component={ReviewProduct} />
+							<Route exact path="/orders" component={UserOrders} />
+							<Route path="/admin/edit/user/:id" component={EditUser} />
+							<Route path="/admin/edit/category/:id" component={EditCategory} />
+							<Route path="/admin/edit/product/:id" component={EditProduct} />
+							<Route path="/admin/edit/order/:id" component={EditOrder} />
+							<Route path="/category/:id" component={SingleCategory} />
+							<Route path="/checkout" component={CheckoutView} />
+							<Redirect to="/home" />
+						</Switch>
 					</div>
-				</Router>
-			)
-		}
+				</div>
+			</Router>
+		)
 	}
 }
+
 
 /**
  * CONTAINER

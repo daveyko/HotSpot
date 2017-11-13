@@ -1,5 +1,6 @@
 import React from 'react'
-import {connect} from 'react-redux'
+import {connect, Provider} from 'react-redux'
+import store from '../../store'
 import Chart from './Chart.js'
 import {fetchFilterClicks, removeGraph, fetchClicks } from '../../store'
 import {Popover, OverlayTrigger, Button, Checkbox} from 'react-bootstrap'
@@ -47,19 +48,20 @@ class basicHeatmap extends React.Component {
 		// )
 
 		if(this.props.graph === 'Scatter'){
-			console.log('fucu', document.body.scrollHeight)
 			return (
-				<div className = "basicHeatmap">
-					<OverlayTrigger trigger="click" placement="bottom" overlay={popoverBottom}>
-						<Button>Holy guacamole!</Button>
-					</OverlayTrigger>
-					<Chart />
-				</div>
+				<PopoutWindow title = "Scatter" url = "http://localhost:8080/home/graph" options = {{width: '1440px', height: '840px'}} onClosing = {this.props.history.push('/home')}>
+					<Provider store = {store}>
+						<div className = "basicHeatmap">
+							<OverlayTrigger trigger="click" placement="bottom" overlay={popoverBottom}>
+								<Button>Holy guacamole!</Button>
+							</OverlayTrigger>
+							<Chart />
+						</div>
+					</Provider>
+				</PopoutWindow>
 			)
 		} else {
-			console.log('ay!!!!')
 			return (
-				// alert('FUCKYOUnIGGA!!!')
 				<PopoutWindow title='Window title1'>
   				<div>Popped out content!</div>
 				</PopoutWindow>
@@ -71,6 +73,8 @@ class basicHeatmap extends React.Component {
 
 	}
 }
+
+
 
 const mapDispatchToProps = (dispatch) => {
 	return {

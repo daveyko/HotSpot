@@ -6,6 +6,7 @@ import {connect} from 'react-redux'
 const HeatmapConductor = props => {
 	switch (props.view) {
 	case 'Scatter':
+		console.log('CONDUCTORRENDER!')
 		return  <Scatter />
 	case 'Heat':
 		return <Scatter />
