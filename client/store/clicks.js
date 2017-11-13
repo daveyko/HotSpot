@@ -98,9 +98,14 @@ export default function (state = clickState, action) {
 	case ADD_CLICK:
 		newState = {...state, all: state.all.concat(action.click)}
 		return newState
-	case RESIZE_CLICK:
-		newState = {...state, all: action.clicks}
+	case RESIZE_CLICK: {
+		let filteredPrevClicks
+		action.clicks.forEach((newClick) => {
+			filteredPrevClicks = state.all.filter((clicks) => clicks.id !== newClick.id).concat(newClick)
+		})
+		newState = {...state, all: filteredPrevClicks}
 		return newState
+	}
 	default:
 		return state
 	}

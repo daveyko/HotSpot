@@ -42,7 +42,10 @@ router.post('/', (req, res, next) => {
 			y: req.body.y,
 			element: req.body.element,
 			top: req.body.top,
-			left: req.body.left
+			left: req.body.left,
+			clientwidth: req.body.clientwidth,
+			clientheight: req.body.clientheight,
+			resized: req.body.resized
 		},
 		defaults: {
 			referrer: req.body.referrer,

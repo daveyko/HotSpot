@@ -11,7 +11,7 @@ class Scatterplot extends React.Component {
 		this.hideToolTip = this.hideToolTip.bind(this)
 		this.hashCode = this.hashCode.bind(this)
 		this.repositionCoordinates = this.repositionCoordinates.bind(this)
-
+		this.reposition = this.reposition.bind(this)
 		this.state = {
 			tooltip: {
 				visibility: false,
@@ -35,8 +35,45 @@ class Scatterplot extends React.Component {
 		// 	console.log('TOPLISTITEMDELTA', topListItem.top, topListItem.left)
 		// })
 		// onLoad()
-		window.addEventListener('resize', this.repositionCoordinates)
+		this.reposition()
+		// window.addEventListener('resize', this.repositionCoordinates)
 
+	}
+
+	reposition(){
+
+		let elementsHashArr = this.props.clicks.all.map((click) => {
+			return Number(click.element)
+		})
+
+		let filteredElementsHashArr = elementsHashArr.filter((item, pos) => elementsHashArr.indexOf(item) === pos)
+
+		for (let i = 0; i < filteredElementsHashArr.length; i++){
+
+			let clickedElementsArr = this.props.clicks.all.filter((click) => Number(click.element) === filteredElementsHashArr[i])
+
+			let baselineClick = clickedElementsArr.filter((click) => click.clientwidth === 1440)[0]
+
+			let baselineLeft = baselineClick.left
+
+			let baselineTop = baselineClick.top
+
+			let clicksToReposition = clickedElementsArr.filter((click) => click.clientwidth !== 1440).map((filteredClick) => {
+				return {
+					id: filteredClick.id,
+					x: filteredClick.x + (baselineLeft - filteredClick.left),
+					y: filteredClick.y - Math.abs(baselineTop - filteredClick.top),
+					element: filteredClick.element,
+					top: baselineTop,
+					left: baselineLeft,
+					clientwidth: filteredClick.clientwidth
+				}
+			})
+			console.log('CLICKSTOREPO', clicksToReposition)
+			if (clicksToReposition.length){
+				this.props.handleResize(clicksToReposition)
+			}
+		}
 	}
 
 	hashCode(str){
@@ -59,10 +96,14 @@ class Scatterplot extends React.Component {
 			let matchingArr = this.props.clicks.all.filter((obj) => Number(obj.element) === hash)
 			if (matchingArr.length){
 				matchingArr.forEach((obj) => {
-					obj.x = obj.x*(allEl[i].getBoundingClientRect().left/obj.left)
-					obj.y = obj.y*(obj.top/allEl[i].getBoundingClientRect().top)
-					obj.top = allEl[i].getBoundingClientRect().top
-					obj.left = allEl[i].getBoundingClientRect().left
+					if (allEl[i].getBoundingClientRect().left){
+						obj.x = obj.x*(allEl[i].getBoundingClientRect().left/obj.left)
+						obj.left = allEl[i].getBoundingClientRect().left
+					}
+					if (allEl[i].getBoundingClientRect().top){
+						obj.y = obj.y*(allEl[i].getBoundingClientRect().top/obj.top)
+						obj.top = allEl[i].getBoundingClientRect().top
+					}
 					newClicksArr.push(obj)
 				})
 			}
@@ -92,7 +133,7 @@ class Scatterplot extends React.Component {
 		})
 	}
 	render(){
-		console.log('RERENDER!')
+		console.log('windowlocation!', window.location.pathname)
 
 		let xScale = d3.scaleLinear()
 			.range([0,window.innerWidth])
@@ -123,6 +164,7 @@ class Scatterplot extends React.Component {
 						onMouseOut = {this.hideToolTip}
 						data-count = {datapoint.count}
 						data-url = {datapoint.referrerSubstring}
+						data-id = {datapoint.id}
 					/>
 				</g>
 

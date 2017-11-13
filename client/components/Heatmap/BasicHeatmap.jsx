@@ -3,6 +3,7 @@ import {connect} from 'react-redux'
 import Chart from './Chart.js'
 import {fetchFilterClicks, removeGraph, fetchClicks } from '../../store'
 import {Popover, OverlayTrigger, Button, Checkbox} from 'react-bootstrap'
+import PopoutWindow from 'react-popout'
 
 class basicHeatmap extends React.Component {
 	constructor (props){
@@ -13,7 +14,7 @@ class basicHeatmap extends React.Component {
 	}
 
 	render(){
-
+		console.log('HERE!!!')
 		let topSites = this.props.clicks.top
 		let data = this.props.clicks.all
 		const popoverBottom = (<div></div>)
@@ -46,7 +47,7 @@ class basicHeatmap extends React.Component {
 		// )
 
 		if(this.props.graph === 'Scatter'){
-			console.log('SCROLLHEIGHT', document.body.scrollHeight)
+			console.log('fucu', document.body.scrollHeight)
 			return (
 				<div className = "basicHeatmap">
 					<OverlayTrigger trigger="click" placement="bottom" overlay={popoverBottom}>
@@ -56,10 +57,15 @@ class basicHeatmap extends React.Component {
 				</div>
 			)
 		} else {
+			console.log('ay!!!!')
 			return (
-				<div className = "basicHeatmap">
-					<Chart  />
-				</div>
+				// alert('FUCKYOUnIGGA!!!')
+				<PopoutWindow title='Window title1'>
+  				<div>Popped out content!</div>
+				</PopoutWindow>
+				// <div className = "basicHeatmap">
+				// 	<Chart  />
+				// </div>
 			)
 		}
 

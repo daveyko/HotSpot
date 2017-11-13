@@ -3,9 +3,10 @@ import {IndexLinkContainer} from 'react-router-bootstrap'
 import {Navbar, Nav, NavItem, NavDropdown, MenuItem, Label} from 'react-bootstrap'
 import {NavLink} from 'react-router-dom'
 import history from './../history'
-import {setModal, removeModal, getMe, logout, setGraph} from '../store'
+import {setModal, removeModal, getMe, logout, setGraph, fetchClicks} from '../store'
 import {connect} from 'react-redux'
 import SearchQ from './Search.jsx'
+import {resizeClicks} from '../store/clicks.js'
 
 function navbarInstance(props) {
 
@@ -23,6 +24,45 @@ function navbarInstance(props) {
 	}
 
 	const cartData = getCartData()
+
+	const reposition = () => {
+		console.log('CALLED!')
+		let elementsHashArr = props.clicks.all.map((click) => {
+			return Number(click.element)
+		})
+
+		let filteredElementsHashArr = elementsHashArr.filter((item, pos) => elementsHashArr.indexOf(item) === pos)
+
+		for (let i = 0; i < filteredElementsHashArr.length; i++){
+
+			let clickedElementsArr = props.clicks.all.filter((click) => Number(click.element) === filteredElementsHashArr[i])
+
+			console.log('clickedElementsARR!', clickedElementsArr)
+			let baselineClick = clickedElementsArr.filter((click) => click.clientwidth === 1440)[0]
+
+			let baselineLeft = baselineClick.left
+
+			let baselineTop = baselineClick.top
+
+			let clicksToReposition = clickedElementsArr.filter((click) => click.clientwidth !== 1440).map((filteredClick) => {
+				return {
+					id: filteredClick.id,
+					x: filteredClick.x + (baselineLeft - filteredClick.left),
+					y: filteredClick.y - Math.abs(baselineTop - filteredClick.top),
+					element: filteredClick.element,
+					top: baselineTop,
+					left: baselineLeft,
+					clientwidth: filteredClick.clientwidth,
+					clientheight: filteredClick.clientheight,
+					resized: true
+				}
+			})
+			console.log('CLICKSTOREPO', clicksToReposition)
+			if(clicksToReposition.length){
+				props.handleResize(clicksToReposition)
+			}
+		}
+	}
 
 	return (
 		<Navbar inverse collapseOnSelect>
@@ -51,7 +91,9 @@ function navbarInstance(props) {
 						<MenuItem eventKey={3.3}>Logout</MenuItem>
 					</NavDropdown>
 					<NavDropdown eventKey={2} title="Hot-Spot" id="basic-nav-dropdown">
-						<MenuItem onClick={() => {props.handleScatter('Scatter')}} eventKey={3.1}>ScatterPlot</MenuItem>
+						<MenuItem onClick={() => {
+							props.handleScatter('Scatter')
+						}} eventKey={3.1}>ScatterPlot</MenuItem>
 						<MenuItem onClick={() => {props.handleScatter('Heat')}} eventKey={3.3}>HeatMap</MenuItem>
 						<MenuItem onClick={() => {props.handleScatter('Scroll')}} eventKey={3.3}>Scroll HeatMap</MenuItem>
 					</NavDropdown>
@@ -76,7 +118,8 @@ const mapStateToProps = (state) => {
 	return {
 		modals: state.modals,
 		user: state.user,
-		cart: state.cart
+		cart: state.cart,
+		clicks: state.clicks
 	}
 }
 
@@ -96,6 +139,12 @@ const mapDispatchToProps = (dispatch) => {
 		},
 		handleScatter(graph){
 			dispatch(setGraph(graph))
+		},
+		handleResize(arr){
+			dispatch(resizeClicks(arr))
+		},
+		getClicks(){
+			return Promise.resolve(dispatch(fetchClicks(window.location.pathname)))
 		}
 	}
 }
