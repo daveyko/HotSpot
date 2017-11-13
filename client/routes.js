@@ -28,6 +28,7 @@ import ReactDOM from 'react-dom'
 import PopoutWindow from 'react-popout'
 import store from './store'
 import {Provider} from 'react-redux'
+import Wrapper from './components/AAA.jsx'
 
 
 /**
@@ -114,30 +115,10 @@ class Routes extends Component {
 		return(
 			<Router history={history}>
 				<div>
-					<div id = "parent" onClick = {(e) => {
-						if(this.props.graph === ''){
-							let adjustedX = this.getPosition(e.target).x
-							let adjustedY = this.getPosition(e.target).y
-							this.props.clickHandler(window.location.pathname)
-							let reqbody = {
-								x: e.pageX,
-								y: e.pageY,
-								path: window.location.path,
-								element: this.hashCode(e.target.outerHTML),
-								top: adjustedY,
-								left: adjustedX,
-								clientwidth: window.innerWidth,
-								clientheight: window.innerHeight,
-								resized: false
-							}
-							this.props.preClickHandler(this.props.history.pop())
-								.then(() => {
-									this.props.postClickHandler(reqbody)
-								})
-						}
-
-					}}>
-						<Navbar cart={this.props.cart}/>
+					<div id = "parent">
+						<Wrapper>
+							<Navbar cart={this.props.cart}/>
+						</Wrapper>
 						<Modal currentModal = {currentModal} />
 						<Switch>
 							<Route exact path="/home" render={(props) => {
