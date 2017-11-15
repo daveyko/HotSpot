@@ -7,6 +7,7 @@ import {setModal, removeModal, getMe, logout, setGraph, fetchClicks} from '../st
 import {connect} from 'react-redux'
 import SearchQ from './Search.jsx'
 import {resizeClicks} from '../store/clicks.js'
+import Wrapper from './HOC/Wrapper.jsx'
 
 function navbarInstance(props) {
 
@@ -152,6 +153,10 @@ const mapDispatchToProps = (dispatch) => {
 	}
 }
 
-const NavBarContainer = connect(mapStateToProps, mapDispatchToProps)(navbarInstance)
+const WrappedNav = Wrapper('api/clicks')(navbarInstance)
+const NavBarContainer = connect(mapStateToProps, mapDispatchToProps)(WrappedNav)
+
+
+
 
 export default NavBarContainer

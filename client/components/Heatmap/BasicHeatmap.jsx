@@ -48,7 +48,7 @@ class basicHeatmap extends React.Component {
 		// </Popover>
 		// )
 
-		if(this.props.graph === 'Scatter'){
+		if(this.props.graphToShow === 'Scatter'){
 			return (
 				<PopoutWindow title = "Scatter" url = "http://localhost:8080/home/graph" options = {{width: '1440px', height: '840px'}}>
 					<Provider store = {store}>

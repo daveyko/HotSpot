@@ -28,7 +28,7 @@ import ReactDOM from 'react-dom'
 import PopoutWindow from 'react-popout'
 import store from './store'
 import {Provider} from 'react-redux'
-import Wrapper from './components/AAA.jsx'
+import Wrapper from './components/HOC/Wrapper.jsx'
 
 
 /**
@@ -116,9 +116,7 @@ class Routes extends Component {
 			<Router history={history}>
 				<div>
 					<div id = "parent">
-						<Wrapper>
-							<Navbar cart={this.props.cart}/>
-						</Wrapper>
+						<Navbar cart={this.props.cart}/>
 						<Modal currentModal = {currentModal} />
 						<Switch>
 							<Route exact path="/home" render={(props) => {

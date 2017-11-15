@@ -6,8 +6,7 @@ import {connect} from 'react-redux'
 const HeatmapConductor = props => {
 	switch (props.view) {
 	case 'Scatter':
-		console.log('CONDUCTORRENDER!')
-		return  <Scatter />
+		return  <Scatter graphToShow = {props.graphToShow} />
 	case 'Heat':
 		return <Scatter />
 	case 'Scroll':
