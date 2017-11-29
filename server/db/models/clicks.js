@@ -46,7 +46,6 @@ const Click = db.define('click', {
 	},
 	page: {
 		type: Sequelize.STRING,
-		defaultValue: '/home'
 	},
 	count: {
 		type: Sequelize.INTEGER,

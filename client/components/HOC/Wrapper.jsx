@@ -1,34 +1,82 @@
 import React, {Component} from 'react'
-import ReactDOM from 'react-dom'
 import axios from 'axios'
-import HeatMapConductor from '../Heatmap/HeatMapConductor.jsx'
+import Chart from './HOCChart.jsx'
+import ModalConductor from './HOCModalConductor.jsx'
+import {DropdownButton, MenuItem } from 'react-bootstrap'
 
-const HOC = (apiRoute) => (WrappedComponent) => {
+const HOCWrapper  = (apiRoute, pw) => (WrappedComponent) => {
 	return class HOC extends Component {
 		constructor (props) {
 			super(props)
 			this.state = {
-				graph: 'hide'
+				graph: 'Hide',
+				clicks: [],
+				screenSize: 0,
+				sessionStorageKey: 'session',
+				compheight: 0,
+				compwidth:0,
+				modal: false,
+				button: false
 			}
 			this.hashCode = this.hashCode.bind(this)
 			this.getPosition = this.getPosition.bind(this)
 			this.onClick = this.onClick.bind(this)
-			this.showGraph = this.showGraph.bind(this)
-
-			this.wrappedStyle = {
-				position: 'relative'
-			}
-			this.wrapperStyle = {
-				height: '100%',
-				width: '100%',
-				zIndex: '2',
-				position: 'absolute',
-				top: '0px',
-				left: '0px'
-			}
+			this.toggleGraph = this.toggleGraph.bind(this)
+			this.updateScreenSize = this.updateScreenSize.bind(this)
+			this.closeGraph = this.closeGraph.bind(this)
+			this.toggleModal = this.toggleModal.bind(this)
+			this.toggleButton = this.toggleButton.bind(this)
 		}
 
-		componentDidMount(){
+		toggleModal(){
+			this.setState({
+				modal: this.state.modal ? false : true
+			})
+		}
+
+		toggleButton(){
+			this.setState({
+				button: this.state.button ? false: true
+			})
+		}
+
+
+		updateScreenSize(width, compheight, compwidth){
+
+			let cachedClicks = sessionStorage.getItem(this.state.sessionStorageKey)
+			let parsedClicks = JSON.parse(cachedClicks)
+
+			let filteredClicks = parsedClicks.filter((click) => click.clientwidth === width)
+			this.setState({
+				clicks: filteredClicks,
+				compheight,
+				compwidth,
+				screenSize: width
+			})
+
+		}
+
+		componentDidMount() {
+
+			sessionStorage.clear()
+
+			window.viewHeatMap = () => {
+				this.setState({
+					button: true
+				})
+			}
+
+			axios.get(apiRoute)
+				.then((clicks => {
+					sessionStorage.setItem(this.state.sessionStorageKey, JSON.stringify(clicks.data))
+					return clicks.data
+				}))
+				.then((clicksOnMount) => {
+					this.setState({
+						clicks: clicksOnMount,
+					})
+				})
+				.catch(console.log)
 		}
 
 		hashCode(str){
@@ -52,18 +100,19 @@ const HOC = (apiRoute) => (WrappedComponent) => {
 				yPosition += (element.offsetTop - element.scrollTop + element.clientTop)
 				element = element.offsetParent
 			}
-
 			return { x: xPosition, y: yPosition }
 		}
 
 
 		onClick(e){
+
 			let adjustedX = this.getPosition(e.target).x
 			let adjustedY = this.getPosition(e.target).y
+
 			let reqbody = {
-				x: e.pageX,
-				y: e.pageY,
-				path: window.location.path,
+				x: e.pageX + this.container.getBoundingClientRect().left,
+				y: e.pageY - this.container.getBoundingClientRect().top,
+				path: window.location.pathname,
 				element: this.hashCode(e.target.outerHTML),
 				top: adjustedY,
 				left: adjustedX,
@@ -75,26 +124,58 @@ const HOC = (apiRoute) => (WrappedComponent) => {
 		}
 
 		postClick(body){
+
 			axios.post(apiRoute, body)
+				.then(() => {
+					let currSession = JSON.parse(sessionStorage.getItem(this.state.sessionStorageKey))
+					currSession.push(body)
+					sessionStorage.setItem(this.state.sessionStorageKey, JSON.stringify(currSession))
+				})
 		}
 
-		showGraph(){
+		toggleGraph(e){
+			if (e === 'exit'){
+				this.setState({
+					button: false
+				})
+			} else {
+				axios.get(apiRoute)
+					.then((clicks => {
+						sessionStorage.setItem(this.state.sessionStorageKey, JSON.stringify(clicks.data))
+						return clicks.data
+					}))
+					.then((clicksOnMount) => {
+						let filteredClicks = clicksOnMount.filter(click => click.clientwidth === window.innerWidth && click.page === window.location.pathname)
+						this.setState({
+							clicks: filteredClicks,
+							graph: e
+						})
+					})
+					.catch(console.log)
+			}
+		}
+
+		closeGraph(){
 			this.setState({
-				graph: 'Scatter'
+				graph: 'Hide'
 			})
 		}
-
 
 		render(){
 
 			return(
-				this.state.graph === 'hide' ?
-					<div onClick = {this.onClick}>
-						<button onClick = {this.showGraph} style = {{zIndex: '5', position: 'absolute', float: 'right'}}>HotSpot</button>
+				this.state.graph === 'Hide' ?
+					<div onClick = {!this.state.button ? this.onClick : null} className = "flex-container" ref = {container => this.container = container}>
+						<ModalConductor modal = {this.state.modal} toggleModal = {this.toggleModal} toggleButton = {this.toggleButton} />
+						{this.state.button ? 	<DropdownButton id = "1" style = {{zIndex: '5', position: 'absolute', top: '0px', left: '0px'}} title = {this.state.graph === 'Hide' ? 'HS' : this.state.graph} onSelect = {this.toggleGraph}>
+							<MenuItem eventKey = "Scatter">Scatter</MenuItem>
+							<MenuItem eventKey = "HeatMap">HeatMap</MenuItem>
+							<MenuItem eventKey = "exit">Exit</MenuItem>
+						</DropdownButton> : null }
 						<WrappedComponent {...this.props}/>
 					</div> :
-					<div>
-						<HeatMapConductor graphToShow = {this.state.graph} view = {this.state.graph} />
+					<div className = "parent" onClick = {this.closeGraph}>
+						<Chart height = {this.state.compheight} width = {this.state.compwidth} clicks = {this.state.clicks} filterClicks = {this.updateScreenSize} graph = {this.state.graph} />
 						<WrappedComponent {...this.props} />
 					</div>
 			)
@@ -102,7 +183,7 @@ const HOC = (apiRoute) => (WrappedComponent) => {
 	}
 }
 
-export default HOC
+export default HOCWrapper
 
 
 

@@ -7,10 +7,9 @@ import {setModal, removeModal, getMe, logout, setGraph, fetchClicks} from '../st
 import {connect} from 'react-redux'
 import SearchQ from './Search.jsx'
 import {resizeClicks} from '../store/clicks.js'
-import Wrapper from './HOC/Wrapper.jsx'
+import HOCWrapper from './HOC/Wrapper.jsx'
 
 function navbarInstance(props) {
-
 	const {handleLogin, cart} = props
 
 	const getCartData = () => {
@@ -153,10 +152,9 @@ const mapDispatchToProps = (dispatch) => {
 	}
 }
 
-const WrappedNav = Wrapper('api/clicks')(navbarInstance)
-const NavBarContainer = connect(mapStateToProps, mapDispatchToProps)(WrappedNav)
+
+const NavBarContainer = connect(mapStateToProps, mapDispatchToProps)(navbarInstance)
+const WrappedNav = HOCWrapper('/api/clicks', 'lakers')(NavBarContainer)
 
 
-
-
-export default NavBarContainer
+export default WrappedNav

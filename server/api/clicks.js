@@ -45,12 +45,10 @@ router.post('/', (req, res, next) => {
 			left: req.body.left,
 			clientwidth: req.body.clientwidth,
 			clientheight: req.body.clientheight,
-			resized: req.body.resized
-		},
-		defaults: {
-			referrer: req.body.referrer,
+			resized: req.body.resized,
 			page: req.body.path
-		}}
+		},
+	}
 	)
 		.spread((clickInstance, created) =>{
 			if (!created){
@@ -65,6 +63,7 @@ router.post('/', (req, res, next) => {
 
 
 router.get('/', (req, res, next) => {
+	console.log('HERE!')
 	Click.findAll()
 		.then((clicks) => {
 			res.json(clicks)

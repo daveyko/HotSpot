@@ -6,6 +6,7 @@ import {Col, Row, Button} from 'react-bootstrap'
 import Categories from './Categories.jsx'
 import SingleProductRatings from './SingleProductRating.jsx'
 import {addToCart} from '../store/cart'
+import Wrapper from './HOC/Wrapper.jsx'
 
 const mapStateToProps = function(state) {
 	return {
@@ -78,4 +79,5 @@ class ProductList extends Component{
 
 const ProductContainer = connect(mapStateToProps, mapDispatchToProps)(ProductList)
 
+// const wrappedProductContainer = Wrapper('api/clicks')(ProductContainer)
 export default ProductContainer

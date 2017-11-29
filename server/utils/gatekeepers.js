@@ -1,5 +1,4 @@
 const admin = (req, res, next) => {
-	console.log('USER', req.user)
 	if (!req.user) {
 		res.status(401).end()
 	} else if (!req.user.isAdmin){

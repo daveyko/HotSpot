@@ -147,7 +147,7 @@ class Routes extends Component {
 							<Route path="/admin/edit/order/:id" component={EditOrder} />
 							<Route path="/category/:id" component={SingleCategory} />
 							<Route path="/checkout" component={CheckoutView} />
-							<Redirect to="/home" />
+							{/* <Redirect to="/home" /> */}
 						</Switch>
 					</div>
 				</div>

@@ -133,8 +133,6 @@ class Scatterplot extends React.Component {
 		})
 	}
 	render(){
-		console.log('windowlocation!', window.location.pathname)
-
 		let xScale = d3.scaleLinear()
 			.range([0,window.innerWidth])
 			.domain(d3.extent(this.props.clicks.all, function(d) { return d.x }))

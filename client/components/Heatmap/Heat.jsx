@@ -163,7 +163,7 @@ class Heat extends React.Component {
 
 		// })
 		let sum = d3.sum(this.state.scaledData, (d) => {return d.count})
-		console.log('SUM', sum)
+		
 		let gridArr = []
 		if(this.state.scaledData.length){
 			let counter = 0
