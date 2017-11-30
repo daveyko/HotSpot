@@ -154,7 +154,7 @@ const mapDispatchToProps = (dispatch) => {
 
 
 const NavBarContainer = connect(mapStateToProps, mapDispatchToProps)(navbarInstance)
-const WrappedNav = HOCWrapper('/api/clicks', 'lakers')(NavBarContainer)
+const WrappedNav = HOCWrapper('/api/clicks')(NavBarContainer)
 
 
 export default WrappedNav

@@ -4,7 +4,7 @@ import Chart from './HOCChart.jsx'
 import ModalConductor from './HOCModalConductor.jsx'
 import {DropdownButton, MenuItem } from 'react-bootstrap'
 
-const HOCWrapper  = (apiRoute, pw) => (WrappedComponent) => {
+const HOCWrapper  = (apiRoute) => (WrappedComponent) => {
 	return class HOC extends Component {
 		constructor (props) {
 			super(props)

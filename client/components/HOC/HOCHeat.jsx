@@ -23,14 +23,14 @@ class HOCHeat extends React.Component {
 	}
 
 	onHover(e){
-		e.target.nextSibling.setAttribute('style', 'display: inline; stroke: white; fill: white;')
+		e.target.nextSibling.setAttribute('style', 'display: inline; stroke: white; fill: white; position: absolute; z-index: 5;')
 		e.target.setAttribute('stroke', 'white')
 		e.target.setAttribute('stroke-width', '3')
 	}
 
 	offHover(e){
 		e.target.nextSibling.setAttribute('style', 'display: none')
-		e.target.setAttribute('stroke-width', '0')
+		e.target.setAttribute('stroke-width', '1')
 	}
 
 	render(){
@@ -72,6 +72,8 @@ class HOCHeat extends React.Component {
 			row++
 		}
 
+
+
 		let totalClicks = d3.sum(aggregateClicks, (c) => c.count)
 
 		let xScale = d3.scaleLinear()
@@ -89,7 +91,7 @@ class HOCHeat extends React.Component {
 		let domainRange = _.range(clicksMin, clicksMax, (clicksMax - clicksMin) / 7 )
 
 		let colorScale = d3.scaleThreshold()
-			.domain(domainRange)
+			.domain(domainRange.length ? domainRange : [0])
 			.range(['#66ff00', '#80d408', '#8cbf0d', '#a69515', '#b3801a', '#cc5522', '#e62b2b', '#ff0033'])
 
 		let heatmap = aggregateClicks.map((click, i) => {
@@ -101,11 +103,13 @@ class HOCHeat extends React.Component {
 						width = {rectWidth}
 						fill = {colorScale(click.count)}
 						data-col = {click.col}
-						onMouseOver = {this.onHover}
-						onMouseOut = {this.offHover}
+						stroke = "white"
+						strokeWidth = "1"
+						// onMouseOver = {this.onHover}
+						// onMouseOut = {this.offHover}
 					/>
-					<text style = {{display: 'none'}}  x = {xScale(click.col)} y = {yScale(click.row) + 10}>
-						<tspan x = {xScale(click.col) + 40} y = {yScale(click.row) + 10} textAnchor = "end" fontSize = "12px" fill = "white">{Number((click.count / totalClicks)*100).toFixed(3) + '%'}</tspan>
+					<text x = {xScale(click.col)} y = {yScale(click.row) + 20}>
+						<tspan x = {xScale(click.col) + 30} y = {yScale(click.row) + 20} textAnchor = "end" fontSize = "20px" fill = "white">{totalClicks ? Number((click.count / totalClicks)*100) < 1 ? '<1%' : Number((click.count / totalClicks)*100).toFixed(1) + '%' : '0%'}</tspan>
 					</text>
 				</g>
 			)
@@ -113,9 +117,7 @@ class HOCHeat extends React.Component {
 		return(
 			<div className = "HOCSvgWrapper" ref = {size => this.size = size}>
 				<svg className = "HOCSvg">
-					<g className = "HOCSvg">
-						{heatmap}
-					</g>
+					{heatmap}
 				</svg>
 			</div>
 		)
