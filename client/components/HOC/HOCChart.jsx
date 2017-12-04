@@ -3,16 +3,18 @@ import Scatterplot from './HOCScatter.jsx'
 import HeatMap from './HOCHeat.jsx'
 
 
-export default function HOCChart (props){
+const HOCChart  = (props) => {
 	return(
 		props.graph === 'Scatter' ?
       	<div className = "HOCWrapper">
-				<Scatterplot clicks = {props.clicks} filterClicks = {props.filterClicks} {...props} />
+				<Scatterplot clicks = {props.clicks} filterClicks = {props.filterClicks} />
 			</div>
 			:
 			<div className = "HOCWrapper">
-				<HeatMap clicks = {props.clicks} filterClicks = {props.filterClicks} width = {props.width} height = {props.height} {...props}/>
+				<HeatMap clicks = {props.clicks} filterClicks = {props.filterClicks}/>
 			</div>
 	)
 }
+
+export default HOCChart
 

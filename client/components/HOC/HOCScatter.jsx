@@ -3,13 +3,6 @@ const d3  = require('d3')
 
 
 class Scatterplot extends React.Component {
-	constructor (props) {
-		super(props)
-		this.state = {
-			height: null,
-			width: null
-		}
-	}
 
 	componentDidMount(){
 		window.addEventListener('resize', ()=>{

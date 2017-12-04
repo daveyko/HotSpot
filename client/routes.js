@@ -181,7 +181,7 @@ const mapDispatch = (dispatch) => {
 			dispatch(fetchCategories())
 			dispatch(fetchCartSession())
 			// dispatch(fetchClicks(window.location.pathname))
-			dispatch(fetchTopClicks())
+			// dispatch(fetchTopClicks())
 			dispatch(getHistory())
 			dispatch(fetchScrolls())
 		},

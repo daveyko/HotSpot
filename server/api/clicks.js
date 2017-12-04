@@ -40,13 +40,10 @@ router.post('/', (req, res, next) => {
 		where: {
 			x: req.body.x,
 			y: req.body.y,
-			element: req.body.element,
-			top: req.body.top,
-			left: req.body.left,
 			clientwidth: req.body.clientwidth,
 			clientheight: req.body.clientheight,
-			resized: req.body.resized,
-			page: req.body.path
+			page: req.body.page,
+			referrer: req.body.referrer
 		},
 	}
 	)

@@ -3,11 +3,6 @@ const d3 = require('d3')
 const _ = require('lodash')
 
 class HOCHeat extends React.Component {
-	constructor (props){
-		super(props)
-		this.onHover = this.onHover.bind(this)
-		this.offHover = this.offHover.bind(this)
-	}
 
 	componentDidMount() {
 		window.addEventListener('resize', ()=>{
@@ -22,16 +17,6 @@ class HOCHeat extends React.Component {
 
 	}
 
-	onHover(e){
-		e.target.nextSibling.setAttribute('style', 'display: inline; stroke: white; fill: white; position: absolute; z-index: 5;')
-		e.target.setAttribute('stroke', 'white')
-		e.target.setAttribute('stroke-width', '3')
-	}
-
-	offHover(e){
-		e.target.nextSibling.setAttribute('style', 'display: none')
-		e.target.setAttribute('stroke-width', '1')
-	}
 
 	render(){
 
@@ -105,8 +90,6 @@ class HOCHeat extends React.Component {
 						data-col = {click.col}
 						stroke = "white"
 						strokeWidth = "1"
-						// onMouseOver = {this.onHover}
-						// onMouseOut = {this.offHover}
 					/>
 					<text x = {xScale(click.col)} y = {yScale(click.row) + 20}>
 						<tspan x = {xScale(click.col) + 30} y = {yScale(click.row) + 20} textAnchor = "end" fontSize = "20px" fill = "white">{totalClicks ? Number((click.count / totalClicks)*100) < 1 ? '<1%' : Number((click.count / totalClicks)*100).toFixed(1) + '%' : '0%'}</tspan>
@@ -123,7 +106,5 @@ class HOCHeat extends React.Component {
 		)
 	}
 }
-
-
 
 export default HOCHeat
